@@ -20,6 +20,8 @@ PokeGOPip is an Xposed module that enables Picture-in-Picture (PiP) mode in Pok�
 ## Preview
 ![preview](preview/preview1.gif)
 
+## My [Discord](https://discord.gg/j2g97Cm9Kc) for japanese
+
 ## Disclaimer
 
 This module is intended for personal use only and is not affiliated with or endorsed by Niantic, Inc., or The Pokémon Company. Use of this module may violate Pokémon GO's terms of service. Use at your own risk.
