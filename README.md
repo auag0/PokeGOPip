@@ -18,7 +18,8 @@ PokeGOPip is an Xposed module that enables Picture-in-Picture (PiP) mode in Pok√
 5. Reboot your device for the changes to take effect
 
 ## Preview
-![preview](preview/preview1.gif)
+![preview1](preview/preview1.gif)
+![preview2](https://private-user-images.githubusercontent.com/48195751/386957661-d1d95edb-2763-4ead-91ef-98e298c6235e.gif)
 
 ## My [Discord](https://discord.gg/j2g97Cm9Kc) for japanese
 
