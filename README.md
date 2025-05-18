@@ -7,6 +7,7 @@ PokeGOPip is an Xposed module that enables Picture-in-Picture (PiP) mode in Pok√
 - Enables Picture-in-Picture (PiP) mode in Pok√©mon GO
 - Allows users to continue playing while multitasking
 - Resizable, movable overlay window
+- Startup black screen (Reboot and still black screen until you disable it)
 
 ## Installation
 
