@@ -89,7 +89,7 @@ class HookPokeGO : IXposedHookLoadPackage {
 
         val prefs = activity.getSharedPreferences("pip", Context.MODE_PRIVATE)
         if (prefs.getBoolean("start_up", false)) {
-            mUnityPlayer.visibility = View.GONE
+            mUnityPlayer.visibility = View.INVISIBLE
             Log.i(TAG, "Startup black screen enabled: hide mUnityPlayer")
         }
 
@@ -100,7 +100,7 @@ class HookPokeGO : IXposedHookLoadPackage {
                 when (intent.action) {
                     ACTION_TOGGLE_BLACK_SCREEN -> {
                         if (mUnityPlayer.visibility == View.VISIBLE) {
-                            mUnityPlayer.visibility = View.GONE
+                            mUnityPlayer.visibility = View.INVISIBLE
                             Log.i(TAG, "hide mUnityPlayer")
                         } else {
                             mUnityPlayer.visibility = View.VISIBLE
