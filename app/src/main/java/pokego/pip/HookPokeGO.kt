@@ -85,7 +85,7 @@ class HookPokeGO : IXposedHookLoadPackage {
     private fun handleOnCreate(activity: Activity) {
         Log.i(TAG, "called onCreate")
 
-        val mUnityPlayer = getObjectField(activity, "mUnityPlayer") as View
+        val mUnityPlayer = callMethod(getObjectField(activity, "mUnityPlayer"), "getView") as View
 
         val prefs = activity.getSharedPreferences("pip", Context.MODE_PRIVATE)
         if (prefs.getBoolean("start_up", false)) {
@@ -141,15 +141,15 @@ class HookPokeGO : IXposedHookLoadPackage {
         val activityRef = WeakReference(activity)
 
         val mUnityPlayer = getObjectField(activity, "mUnityPlayer")
-        var width = callMethod(mUnityPlayer, "getWidth") as Int
-        var height = callMethod(mUnityPlayer, "getHeight") as Int
+        val view = callMethod(mUnityPlayer, "getView") as View
+        var width = runCatching { callMethod(view, "getWidth") as Int }.getOrNull() ?: 0
+        var height = runCatching { callMethod(view, "getHeight") as Int }.getOrNull() ?: 0
         if (width <= 0 || height <= 0) {
             width = 9
             height = 16
         }
         Log.i(TAG, "width: $width, height: $height")
 
-        val view = callMethod(mUnityPlayer, "getView") as View
         val viewBounds = Rect()
         view.getGlobalVisibleRect(viewBounds)
 
