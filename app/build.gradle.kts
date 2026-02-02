@@ -1,3 +1,15 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
+fun getSecret(key: String): String? {
+    return localProperties.getProperty(key) ?: System.getenv(key)
+}
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -7,9 +19,9 @@ android {
     signingConfigs {
         create("release") {
             storeFile = file("release.jks")
-            keyAlias = System.getenv("keyAlias")
-            storePassword = System.getenv("storePassword")
-            keyPassword = System.getenv("keyPassword")
+            keyAlias = getSecret("keyAlias")
+            storePassword = getSecret("storePassword")
+            keyPassword = getSecret("keyPassword")
         }
     }
     namespace = "pokego.pip"
