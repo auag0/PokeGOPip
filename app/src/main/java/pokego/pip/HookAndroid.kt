@@ -15,7 +15,9 @@ class HookAndroid : IXposedHookLoadPackage {
             "supportsPictureInPicture",
             object : XC_MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam) {
-                    val packageName = getObjectField(param.thisObject, "packageName") as? String?
+                    val packageName = runCatching {
+                        getObjectField(param.thisObject, "packageName") as? String?
+                    }.getOrNull()
                     if (packageName == "com.nianticlabs.pokemongo") {
                         Log.d(TAG, "set supportsPictureInPicture to true")
                         param.result = true
