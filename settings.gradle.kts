@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PokeGO Pip"
+rootProject.name = "PokeGO PiP"
 include(":app")
