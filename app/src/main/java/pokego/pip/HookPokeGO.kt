@@ -211,7 +211,9 @@ class HookPokeGO : IXposedHookLoadPackage {
         Log.i(TAG, "onDestroy")
 
         try {
-            activity.unregisterReceiver(broadcastReceiver)
+            if (broadcastReceiver != null) {
+                activity.unregisterReceiver(broadcastReceiver)
+            }
             Log.i(TAG, "unregistered receiver")
         } catch (e: Throwable) {
             Log.e(TAG, "failed to unregister receiver", e)
