@@ -59,6 +59,9 @@ android {
             excludes.add("kotlin-tooling-metadata.json")
         }
     }
+    androidResources {
+        additionalParameters.addAll(listOf("--package-id", "0x81", "--allow-reserved-package-id"))
+    }
 }
 
 dependencies {

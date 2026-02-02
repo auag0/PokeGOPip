@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.XModuleResources
 import android.graphics.Rect
 import android.graphics.drawable.Icon
 import android.os.Build
@@ -18,6 +19,7 @@ import android.util.Rational
 import android.view.View
 import android.widget.Toast
 import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers.callMethod
@@ -26,15 +28,22 @@ import de.robv.android.xposed.XposedHelpers.getObjectField
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.lang.ref.WeakReference
 
-class HookPokeGO : IXposedHookLoadPackage {
+class HookPokeGO : IXposedHookLoadPackage, IXposedHookZygoteInit {
     companion object {
         private const val ACTION_TOGGLE_BLACK_SCREEN = "ACTION_PIP_BLACK_SCREEN"
         private const val ACTION_TOGGLE_STARTUP_MODE = "ACTION_START_UP_BLACK_SCREEN"
     }
 
+    private var modulePath: String? = null
+    private var moduleRes: XModuleResources? = null
+
     private var broadcastReceiver: BroadcastReceiver? = null
     private lateinit var unityMainActivityClass: Class<*>
     private var toast: Toast? = null
+
+    override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
+        modulePath = startupParam.modulePath
+    }
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         Log.i(TAG, "started pokemon go")
@@ -122,7 +131,7 @@ class HookPokeGO : IXposedHookLoadPackage {
                         } else {
                             R.string.toast_startup_screen_visible
                         }
-                        toast(activity, activity.getString(msgRes))
+                        toast(activity, getModuleRes().getString(msgRes))
                     }
                 }
             }
@@ -196,8 +205,8 @@ class HookPokeGO : IXposedHookLoadPackage {
                     activity,
                     android.R.drawable.ic_lock_power_off
                 ),
-                activity.getString(R.string.pip_action_toggle_screen),
-                activity.getString(R.string.pip_action_toggle_screen_desc),
+                getModuleRes().getString(R.string.pip_action_toggle_screen),
+                getModuleRes().getString(R.string.pip_action_toggle_screen_desc),
                 PendingIntent.getBroadcast(
                     activity,
                     0,
@@ -212,8 +221,8 @@ class HookPokeGO : IXposedHookLoadPackage {
                     activity,
                     android.R.drawable.ic_popup_sync
                 ),
-                activity.getString(R.string.pip_action_toggle_startup_visibility),
-                activity.getString(R.string.pip_action_toggle_startup_visibility_desc),
+                getModuleRes().getString(R.string.pip_action_toggle_startup_visibility),
+                getModuleRes().getString(R.string.pip_action_toggle_startup_visibility_desc),
                 PendingIntent.getBroadcast(
                     activity,
                     1,
@@ -236,5 +245,12 @@ class HookPokeGO : IXposedHookLoadPackage {
         val w = width.takeIf { it > 0 } ?: 9
         val h = height.takeIf { it > 0 } ?: 16
         return w to h
+    }
+
+    private fun getModuleRes(): XModuleResources {
+        val path = modulePath ?: throw IllegalStateException("modulePath is not initialized")
+        return moduleRes ?: XModuleResources.createInstance(path, null).also {
+            moduleRes = it
+        }
     }
 }
