@@ -117,10 +117,12 @@ class HookPokeGO : IXposedHookLoadPackage {
                         val newStartUp = !prefs.getBoolean("start_up", false)
                         prefs.edit().putBoolean("start_up", newStartUp).apply()
                         Log.i(TAG, "Startup black screen pref updated: $newStartUp")
-                        toast(
-                            activity,
-                            "Startup black screen set to $newStartUp"
-                        )
+                        val msgRes = if (newStartUp) {
+                            R.string.toast_startup_screen_hidden
+                        } else {
+                            R.string.toast_startup_screen_visible
+                        }
+                        toast(activity, activity.getString(msgRes))
                     }
                 }
             }
@@ -152,40 +154,7 @@ class HookPokeGO : IXposedHookLoadPackage {
         val viewBounds = Rect()
         playerView.getGlobalVisibleRect(viewBounds)
 
-        val actions = listOf(
-            RemoteAction(
-                Icon.createWithResource(
-                    activity,
-                    android.R.drawable.ic_lock_power_off
-                ),
-                "Toggle Black Screen",
-                "Toggle black screen visibility",
-                PendingIntent.getBroadcast(
-                    activity,
-                    0,
-                    Intent(ACTION_TOGGLE_BLACK_SCREEN).apply {
-                        this.`package` = activity.packageName
-                    },
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            ),
-            RemoteAction(
-                Icon.createWithResource(
-                    activity,
-                    android.R.drawable.ic_popup_sync
-                ),
-                "Toggle Startup Mode",
-                "Toggle startup black screen mode",
-                PendingIntent.getBroadcast(
-                    activity,
-                    1,
-                    Intent(ACTION_TOGGLE_STARTUP_MODE).apply {
-                        this.`package` = activity.packageName
-                    },
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-            )
-        )
+        val actions = createPipActions(activity)
 
         val params = PictureInPictureParams.Builder().apply {
             setAspectRatio(Rational(width, height))
@@ -218,6 +187,43 @@ class HookPokeGO : IXposedHookLoadPackage {
         } catch (e: Throwable) {
             Log.e(TAG, "failed to unregister receiver", e)
         }
+    }
+
+    private fun createPipActions(activity: Activity): List<RemoteAction> {
+        return listOf(
+            RemoteAction(
+                Icon.createWithResource(
+                    activity,
+                    android.R.drawable.ic_lock_power_off
+                ),
+                activity.getString(R.string.pip_action_toggle_screen),
+                activity.getString(R.string.pip_action_toggle_screen_desc),
+                PendingIntent.getBroadcast(
+                    activity,
+                    0,
+                    Intent(ACTION_TOGGLE_BLACK_SCREEN).apply {
+                        this.`package` = activity.packageName
+                    },
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            ),
+            RemoteAction(
+                Icon.createWithResource(
+                    activity,
+                    android.R.drawable.ic_popup_sync
+                ),
+                activity.getString(R.string.pip_action_toggle_startup_visibility),
+                activity.getString(R.string.pip_action_toggle_startup_visibility_desc),
+                PendingIntent.getBroadcast(
+                    activity,
+                    1,
+                    Intent(ACTION_TOGGLE_STARTUP_MODE).apply {
+                        this.`package` = activity.packageName
+                    },
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+        )
     }
 
     private fun toast(context: Context, msg: Any?, length: Int = Toast.LENGTH_SHORT) {

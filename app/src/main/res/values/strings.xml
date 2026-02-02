@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PokeGO Pip</string>
+    <string name="module_name">PokeGO PiP</string>
     <string name="module_desc">PokeGo Picture-in-Picture</string>
+
+    <string name="pip_action_toggle_screen">Toggle Screen</string>
+    <string name="pip_action_toggle_screen_desc">Show or hide the screen</string>
+
+    <string name="pip_action_toggle_startup_visibility">Toggle Startup Screen Visibility</string>
+    <string name="pip_action_toggle_startup_visibility_desc">Toggle screen visibility on startup</string>
+
+    <string name="toast_startup_screen_visible">Screen will be shown on startup</string>
+    <string name="toast_startup_screen_hidden">Screen will be hidden on startup</string>
 </resources>
