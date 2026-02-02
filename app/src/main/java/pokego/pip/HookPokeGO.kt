@@ -44,6 +44,10 @@ class HookPokeGO : IXposedHookLoadPackage {
             lpparam.classLoader
         )
 
+        hookActivityLifecycle()
+    }
+
+    private fun hookActivityLifecycle() {
         XposedBridge.hookAllMethods(
             unityMainActivityClass,
             "onCreate",
@@ -83,14 +87,15 @@ class HookPokeGO : IXposedHookLoadPackage {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun handleOnCreate(activity: Activity) {
-        Log.i(TAG, "called onCreate")
+        Log.i(TAG, "onCreate")
 
-        val mUnityPlayer = callMethod(getObjectField(activity, "mUnityPlayer"), "getView") as View
+        val mUnityPlayer = getObjectField(activity, "mUnityPlayer")
+        val playerView = callMethod(mUnityPlayer, "getView") as View
 
         val prefs = activity.getSharedPreferences("pip", Context.MODE_PRIVATE)
         if (prefs.getBoolean("start_up", false)) {
-            mUnityPlayer.visibility = View.INVISIBLE
-            Log.i(TAG, "Startup black screen enabled: hide mUnityPlayer")
+            playerView.visibility = View.INVISIBLE
+            Log.i(TAG, "Startup black screen enabled: hide playerView")
         }
 
         broadcastReceiver = object : BroadcastReceiver() {
@@ -99,12 +104,12 @@ class HookPokeGO : IXposedHookLoadPackage {
 
                 when (intent.action) {
                     ACTION_TOGGLE_BLACK_SCREEN -> {
-                        if (mUnityPlayer.visibility == View.VISIBLE) {
-                            mUnityPlayer.visibility = View.INVISIBLE
-                            Log.i(TAG, "hide mUnityPlayer")
+                        if (playerView.visibility == View.VISIBLE) {
+                            playerView.visibility = View.INVISIBLE
+                            Log.i(TAG, "hide playerView")
                         } else {
-                            mUnityPlayer.visibility = View.VISIBLE
-                            Log.i(TAG, "show mUnityPlayer")
+                            playerView.visibility = View.VISIBLE
+                            Log.i(TAG, "show playerView")
                         }
                     }
 
@@ -136,22 +141,16 @@ class HookPokeGO : IXposedHookLoadPackage {
     }
 
     private fun handleOnUserLeaveHint(activity: Activity) {
-        Log.i(TAG, "called onUserLeaveHint")
+        Log.i(TAG, "onUserLeaveHint")
 
         val activityRef = WeakReference(activity)
 
         val mUnityPlayer = getObjectField(activity, "mUnityPlayer")
-        val view = callMethod(mUnityPlayer, "getView") as View
-        var width = runCatching { callMethod(view, "getWidth") as Int }.getOrNull() ?: 0
-        var height = runCatching { callMethod(view, "getHeight") as Int }.getOrNull() ?: 0
-        if (width <= 0 || height <= 0) {
-            width = 9
-            height = 16
-        }
-        Log.i(TAG, "width: $width, height: $height")
+        val playerView = callMethod(mUnityPlayer, "getView") as View
+        val (width, height) = playerView.safeSize()
 
         val viewBounds = Rect()
-        view.getGlobalVisibleRect(viewBounds)
+        playerView.getGlobalVisibleRect(viewBounds)
 
         val actions = listOf(
             RemoteAction(
@@ -209,7 +208,7 @@ class HookPokeGO : IXposedHookLoadPackage {
     }
 
     private fun handleOnDestroy(activity: Activity) {
-        Log.i(TAG, "called onDestroy")
+        Log.i(TAG, "onDestroy")
 
         try {
             activity.unregisterReceiver(broadcastReceiver)
@@ -223,5 +222,11 @@ class HookPokeGO : IXposedHookLoadPackage {
         toast?.cancel()
         toast = Toast.makeText(context, msg.toString(), length)
         toast?.show()
+    }
+
+    private fun View.safeSize(): Pair<Int, Int> {
+        val w = width.takeIf { it > 0 } ?: 9
+        val h = height.takeIf { it > 0 } ?: 16
+        return w to h
     }
 }
