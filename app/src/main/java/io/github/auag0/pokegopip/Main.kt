@@ -1,4 +1,4 @@
-package pokego.pip
+package io.github.auag0.pokegopip
 
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam

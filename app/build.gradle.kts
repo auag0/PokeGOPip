@@ -24,15 +24,15 @@ android {
             keyPassword = getSecret("keyPassword")
         }
     }
-    namespace = "pokego.pip"
+    namespace = "io.github.auag0.pokegopip"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "pokego.pip"
+        applicationId = "io.github.auag0.pokegopip"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.2.2"
+        versionCode = 6
+        versionName = "1.3.0"
     }
 
     buildTypes {

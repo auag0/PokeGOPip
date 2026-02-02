@@ -1,7 +1,7 @@
 -repackageclasses ""
 -allowaccessmodification
 
--keep class pokego.pip.Main
+-keep class io.github.auag0.pokegopip.Main
 
 -assumenosideeffects public class android.util.Log {
     public static *** d(...);

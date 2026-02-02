@@ -1,4 +1,4 @@
-package pokego.pip
+package io.github.auag0.pokegopip
 
 import android.annotation.SuppressLint
 import android.app.Activity

@@ -1,6 +1,6 @@
-# PokeGOPip
+# PokeGOPiP
 
-PokeGOPip is an Xposed module that enables Picture-in-Picture (PiP) mode in Pokémon GO, allowing you to play the game in a small, resizable overlay window. This feature can be useful for multitasking while keeping the game open, ideal for users who want to continue their Pokémon GO sessions while using other apps.
+PokeGOPiP is an Xposed module that enables Picture-in-Picture (PiP) mode in Pokémon GO, allowing you to play the game in a small, resizable overlay window. This feature can be useful for multitasking while keeping the game open, ideal for users who want to continue their Pokémon GO sessions while using other apps.
 
 ## Features
 
@@ -12,7 +12,7 @@ PokeGOPip is an Xposed module that enables Picture-in-Picture (PiP) mode in Pok�
 ## Installation
 
 1. Install [Xposed](https://repo.xposed.info/) or [LSPosed](https://github.com/LSPosed/LSPosed)
-2. Install [PokeGOPip](https://github.com/auag0/PokeGOPip/releases/latest)
+2. Install [PokeGOPiP](https://github.com/auag0/PokeGOPiP/releases/latest)
 3. Enable the module in Xposed/LSPosed
 4. Select both `Pokémon GO` and `System Framework` in the scope settings
    - System Framework access is required to grant PiP permissions
