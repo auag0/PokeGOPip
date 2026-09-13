@@ -18,6 +18,10 @@ PokeGOPiP is an Xposed module that enables Picture-in-Picture (PiP) mode in Pok√
    - System Framework access is required to grant PiP permissions
 5. Reboot your device for the changes to take effect
 
+## Compatibility
+
+- **2026/09/13:** Still working on v0.427.0.
+
 ## Preview
 ![preview1](preview/preview1.gif)
 ![preview2](https://github.com/user-attachments/assets/0c71400e-6bc6-43c6-a270-81785dee5c27)
